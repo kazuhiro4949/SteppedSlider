@@ -157,16 +157,50 @@ open class SteppedSlider: UIControl {
         stackView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return stackView
     }()
-    
-    private var touchingState: SteppedSliderImageView.State?
-    
+        
     private func commonInit() {
         stackView.frame = bounds
         addSubview(stackView)
         reset()
     }
     
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        guard let touch = touches.first else { return }
+        guard let imageView = hitTest(touch.location(in: self), with: event) as? SteppedSliderImageView,
+            let item = imageView.item else {
+            return
+        }
+        
+        updateImageStates(item: item)
+    }
+    
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        guard let touch = touches.first else { return }
+        let hitTestPoint = CGPoint(x: touch.location(in: self).x, y: stackView.bounds.midY)
+        guard let imageView = hitTest(hitTestPoint, with: event) as? SteppedSliderImageView,
+            let item = imageView.item else {
+                updateStateIfExceeded(point: hitTestPoint)
+                return
+        }
+
+        updateImageStates(item: item)
+    }
+    
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+    }
+
     private func reset() {
+        if isContinuous {
+            resetContinuously()
+        } else {
+            
+        }
+    }
+    
+    private func resetContinuously() {
         stackView.arrangedSubviews.forEach {
             stackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
@@ -191,56 +225,45 @@ open class SteppedSlider: UIControl {
         }
     }
     
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        guard let touch = touches.first else { return }
-        guard let imageView = hitTest(touch.location(in: self), with: event) as? SteppedSliderImageView,
-            let item = imageView.item else {
-            return
-        }
-        imageView.state.toggle()
-        touchingState = imageView.state
-
-        updateImageStates(item: item)
-    }
-    
-    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesMoved(touches, with: event)
-        guard let touch = touches.first else { return }
-        let hitTestPoint = CGPoint(x: touch.location(in: self).x, y: stackView.bounds.midY)
-        guard let imageView = hitTest(hitTestPoint, with: event) as? SteppedSliderImageView,
-            let item = imageView.item else {
-                updateStateIfExceeded(point: hitTestPoint)
-                return
-        }
-
-        if let touchingState = touchingState {
-            imageView.state = touchingState
+    private func resetDiscontinuously() {
+        stackView.arrangedSubviews.forEach {
+            stackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
         }
         
-        updateImageStates(item: item)
-    }
-    
-    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        touchingState = nil
-    }
-    
-    private func updateStateIfExceeded(point: CGPoint) {
-        if let lastImageView = stackView.subviews.last as? SteppedSliderImageView, lastImageView.frame.maxX < point.x {
-            lastImageView.state = .active
-        } else if let firstImageView = stackView.subviews.first as? SteppedSliderImageView, point.x < firstImageView.frame.minX {
-            firstImageView.state = .inactive
+        (0..<numberOfItems).forEach { item in
+            let imageView = SteppedSliderImageView(
+                activeImage: currentMinimumTrackImage,
+                inactiveImage: currentMaximumTrackImage,
+                activeTintColor: minimumTrackTintColor,
+                inactiveTintColor: maximumTrackTintColor)
+            imageView.item = item
+            imageView.contentMode = .scaleAspectFit
+            imageView.layer.masksToBounds = true
+            stackView.addArrangedSubview(imageView)
+            
+            if _value == getValue(from: item) {
+                imageView.state = .active
+            } else {
+                imageView.state = .inactive
+            }
         }
     }
     
-    
     private func updateImageStates(item: Int) {
+        if isContinuous {
+            updateImageStatesContinuously(item: item)
+        } else {
+            updateImageStatesDiscontinuously(item: item)
+        }
+    }
+    
+    private func updateImageStatesContinuously(item: Int) {
         let newValue = getValue(from: item)
         let oldItem = getItem(from: _value) ?? 0
         
         if _value < newValue {
-            (oldItem..<item).forEach {
+            (oldItem...item).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .active
             }
         } else if newValue < _value {
@@ -251,11 +274,47 @@ open class SteppedSlider: UIControl {
 
         _value = newValue
     }
+    
+    private func updateImageStatesDiscontinuously(item: Int) {
+        let newValue = getValue(from: item)
+        let oldItem = getItem(from: _value) ?? 0
+        
+        (stackView.subviews[item] as? SteppedSliderImageView)?.state = .active
+        
+        if _value < newValue {
+            (oldItem..<item).forEach {
+                (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
+            }
+        } else if newValue < _value {
+            (item+1...oldItem).forEach {
+                (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
+            }
+        }
+
+        _value = newValue
+    }
+    
+    
+    private func updateStateIfExceeded(point: CGPoint) {
+        if let lastImageView = stackView.subviews.last as? SteppedSliderImageView, lastImageView.frame.maxX < point.x {
+            lastImageView.state = .active
+        } else if let firstImageView = stackView.subviews.first as? SteppedSliderImageView, point.x < firstImageView.frame.minX {
+            firstImageView.state = .inactive
+        }
+    }
+    
+    private func updateStateIfExceededContinuously(point: CGPoint) {
+        if let lastImageView = stackView.subviews.last as? SteppedSliderImageView, lastImageView.frame.maxX < point.x {
+            lastImageView.state = .active
+        } else if let firstImageView = stackView.subviews.first as? SteppedSliderImageView, point.x < firstImageView.frame.minX {
+            firstImageView.state = .inactive
+        }
+    }
 
     /// if YES, value wraps from min <-> max. default = false
 //    open var wraps: Bool = false
     
-//    open var isContiuous: Bool = true
+    open var isContinuous: Bool = true
 //
 //    open var animationSpeed: CGFloat = 0.4
 //

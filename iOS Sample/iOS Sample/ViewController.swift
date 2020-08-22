@@ -33,8 +33,9 @@ class ViewController: UIViewController {
         
         slider.minimumValue = 1
         slider.maximumValue = 10
-        slider.currentMaximumTrackImage = UIImage(systemName: "smiley")
-        slider.currentMinimumTrackImage = UIImage(systemName: "smiley.fill")
+//        slider.currentMaximumTrackImage = UIImage(systemName: "smiley")
+//        slider.currentMinimumTrackImage = UIImage(systemName: "smiley.fill")
+        slider.isContinuous = true
     }
 
 
