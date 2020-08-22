@@ -34,12 +34,21 @@ open class SteppedSlider: UIControl {
     }
     
     /// default 0. this value will be pinned to min/max
-    open var value: Double = 0 {
-        didSet {
-            value = max(min(value, maximumValue), minimumValue)
-            reset()
+    open var value: Double {
+        set {
+            if let item = getItem(from: newValue) {
+                updateImageStates(item: item)
+            } else {
+                _value = newValue
+                reset()
+            }
+        }
+        get {
+            _value
         }
     }
+    
+    private var _value: Double = 0
     
     /// default 0 the current value may change if outside new min value
     open var minimumValue: Double = 0 {
@@ -174,7 +183,7 @@ open class SteppedSlider: UIControl {
             imageView.layer.masksToBounds = true
             stackView.addArrangedSubview(imageView)
             
-            if value < getValue(from: item) {
+            if _value < getValue(from: item) {
                 imageView.state = .inactive
             } else {
                 imageView.state = .active
@@ -228,19 +237,19 @@ open class SteppedSlider: UIControl {
     
     private func updateImageStates(item: Int) {
         let newValue = getValue(from: item)
-        let oldItem = getItem(from: self.value) ?? 0
+        let oldItem = getItem(from: _value) ?? 0
         
-        if self.value < newValue {
+        if _value < newValue {
             (oldItem..<item).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .active
             }
-        } else if newValue < self.value {
+        } else if newValue < _value {
             (item+1...oldItem).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
             }
         }
 
-        value = newValue
+        _value = newValue
     }
 
     /// if YES, value wraps from min <-> max. default = false
