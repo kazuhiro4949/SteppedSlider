@@ -54,6 +54,8 @@ open class SteppedSlider: UIControl {
         }
     }
     
+    private var animator: SteppedSliderAnimation?
+    
     /// default 0 the current value may change if outside new min value
     open var minimumValue: Double = 0 {
         didSet {
@@ -108,44 +110,26 @@ open class SteppedSlider: UIControl {
             reset()
         }
     }
-    
-    var displaylink: CADisplayLink?
-    var startTime: TimeInterval!
-    var endTime: TimeInterval!
-    var interval: TimeInterval!
-    var goalValue: Double!
-    var startValue: Double!
-    
+
     /// move slider at fixed velocity (i.e. duration depends on distance). does not send action
     open func setValue(_ value: Double, animated: Bool) {
         if animated {
-            displaylink = CADisplayLink(target: self, selector: #selector(update(_:)))
-            startTime = Date.timeIntervalSinceReferenceDate
-            endTime = startTime + TimeInterval(animationSpeed)
-            goalValue = value
-            startValue = rawValue
-            displaylink?.add(to: .current, forMode: .common)
+            animator = SteppedSliderAnimation(
+                animationSpeed: animationSpeed,
+                begin: rawValue,
+                end: value,
+                update: { [weak self] (_, value) in
+                    if let item = self?.getItem(from: value) {
+                        self?.updateImageStates(item: item)
+                    }
+                },
+                complesion: { [weak self] (_) in
+                    self?.animator = nil
+                }
+            )
+            animator?.start()
         } else {
             self.value = value
-        }
-    }
-    
-    @objc func update(_ displaylink: CADisplayLink) {
-        let currentTime = Date.timeIntervalSinceReferenceDate
-        guard currentTime <= endTime else {
-            if let item = getItem(from: goalValue) {
-                updateImageStates(item: item)
-            }
-            
-            self.displaylink?.invalidate()
-            self.displaylink = nil
-            return
-        }
-        
-        let currentPercent = (currentTime - startTime) / (endTime - startTime)
-        let currentValue = (goalValue - startValue) * currentPercent + startValue
-        if let item = getItem(from: currentValue) {
-            updateImageStates(item: item)
         }
     }
     
