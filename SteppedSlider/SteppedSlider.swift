@@ -36,7 +36,7 @@ open class SteppedSlider: UIControl {
     /// default 0. this value will be pinned to min/max
     open var value: Double {
         set {
-            if let item = getItem(from: currentValue) {
+            if let item = getItem(from: rawValue) {
                 updateImageStates(item: item)
             } else {
                 rawValue = newValue
@@ -44,14 +44,6 @@ open class SteppedSlider: UIControl {
             }
         }
         get {
-            currentValue
-        }
-    }
-    
-    private var currentValue: Double {
-        if wraps {
-            return maximumValue - rawValue
-        } else {
             return rawValue
         }
     }
@@ -117,9 +109,44 @@ open class SteppedSlider: UIControl {
         }
     }
     
+    var displaylink: CADisplayLink?
+    var startTime: TimeInterval!
+    var endTime: TimeInterval!
+    var interval: TimeInterval!
+    var goalValue: Double!
+    var startValue: Double!
+    
     /// move slider at fixed velocity (i.e. duration depends on distance). does not send action
-    open func setValue(_ value: Int, animated: Bool) {
+    open func setValue(_ value: Double, animated: Bool) {
+        if animated {
+            displaylink = CADisplayLink(target: self, selector: #selector(update(_:)))
+            startTime = Date.timeIntervalSinceReferenceDate
+            endTime = startTime + TimeInterval(animationSpeed)
+            goalValue = value
+            startValue = rawValue
+            displaylink?.add(to: .current, forMode: .common)
+        } else {
+            self.value = value
+        }
+    }
+    
+    @objc func update(_ displaylink: CADisplayLink) {
+        let currentTime = Date.timeIntervalSinceReferenceDate
+        guard currentTime <= endTime else {
+            if let item = getItem(from: goalValue) {
+                updateImageStates(item: item)
+            }
+            
+            self.displaylink?.invalidate()
+            self.displaylink = nil
+            return
+        }
         
+        let currentPercent = (currentTime - startTime) / (endTime - startTime)
+        let currentValue = (goalValue - startValue) * currentPercent + startValue
+        if let item = getItem(from: currentValue) {
+            updateImageStates(item: item)
+        }
     }
     
     open var numberOfValues: Int {
@@ -324,12 +351,9 @@ open class SteppedSlider: UIControl {
             rawValue = minimumValue
         }
     }
-
-    /// if YES, value wraps from min <-> max. default = false
-    open var wraps: Bool = false
-//
-//    open var animationSpeed: CGFloat = 0.4
-//
+    
+    open var animationSpeed: CGFloat = 0.2
+    
 //    func preferredImage(for state: UIControl.State) -> UIImage? {
 //        return nil
 //    }

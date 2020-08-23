@@ -50,12 +50,18 @@ class ViewController: UIViewController {
         slider.addTarget(self, action: #selector(valueChanged(_:)), for: .valueChanged)
         textLabel.text = "\(stepper.value)"
     }
+    
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
         stepperTextLabel.text = "\(sender.value)"
     }
     
     @objc func valueChanged(_ slider: SteppedSlider) {
         textLabel.text = "\(slider.value)"
+    }
+    
+    
+    @IBAction func animationButtonTouchUpInside(_ sender: Any) {
+        slider.setValue(0.8, animated: true)
     }
 }
 
