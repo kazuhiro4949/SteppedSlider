@@ -341,21 +341,4 @@ open class SteppedSlider: UIControl {
     deinit {
         animator?.interrupt()
     }
-    
-//    func preferredImage(for state: UIControl.State) -> UIImage? {
-//        return nil
-//    }
-//
-//    func setPreferredImage(_ image: UIImage, for state: UIControl.State) {
-//
-//    }
-//
-//    func setImage(at index: Int, for state: UIControl.State) {
-//
-//    }
-//
-//
-//    func image(at index: Int,for state: UIControl.State) -> UIImage? {
-//        nil
-//    }
 }
