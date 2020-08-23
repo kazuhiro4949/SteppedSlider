@@ -38,9 +38,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        slider.minimumValue = 1
-        slider.maximumValue = 10
-        slider.stepValue = 2
+        slider.minimumValue = 0.1
+        slider.maximumValue = 1
+        slider.stepValue = 0.1
         textLabel.text = "\(slider.value)"
 //        slider.currentMaximumTrackImage = UIImage(systemName: "smiley")
 //        slider.currentMinimumTrackImage = UIImage(systemName: "smiley.fill")

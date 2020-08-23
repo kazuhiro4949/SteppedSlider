@@ -123,25 +123,25 @@ open class SteppedSlider: UIControl {
     }
     
     open var numberOfValues: Int {
-       Int((maximumValue - minimumValue) / stepValue) + 1
+       Int(ceil((maximumValue - minimumValue) / stepValue)) + 1
     }
     
     open var numberOfItems: Int {
-       Int((maximumValue - minimumValue) / stepValue)
+       Int(ceil((maximumValue - minimumValue) / stepValue))
     }
     
     open var isContinuous: Bool = true
     
     open func getValue(from item: Int) -> Double {
         let itemOffset = Double(item + 1) * stepValue
-        return minimumValue + itemOffset
+        return min(maximumValue, minimumValue + itemOffset)
     }
     
     func getItem(from value: Double) -> Int? {
         let maximumRelativeValue = maximumValue - minimumValue
-        let minimumRelativeValue = value - minimumValue
-        let valueOffset = min(maximumRelativeValue, max(0, minimumRelativeValue))
-        let itemOffset = Int(valueOffset / stepValue)
+        let relativeValue = value - minimumValue
+        let valueOffset = min(maximumRelativeValue, max(0, relativeValue))
+        let itemOffset = Int(ceil(valueOffset / stepValue))
         
         if itemOffset == 0  {
             return nil

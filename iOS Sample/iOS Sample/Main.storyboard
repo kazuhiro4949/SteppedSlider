@@ -40,7 +40,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="aw5-nP-NSZ">
                                         <rect key="frame" x="94" y="166.5" width="94" height="68.5"/>
                                         <subviews>
-                                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="10" stepValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="4co-nd-hGN">
+                                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.10000000000000001" minimumValue="0.10000000000000001" maximumValue="1" stepValue="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="4co-nd-hGN">
                                                 <rect key="frame" x="0.0" y="0.0" width="94" height="32"/>
                                                 <connections>
                                                     <action selector="stepperValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="8Jk-LR-oaX"/>
