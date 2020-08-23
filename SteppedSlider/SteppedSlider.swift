@@ -138,7 +138,9 @@ open class SteppedSlider: UIControl {
     }
     
     func getItem(from value: Double) -> Int? {
-        let valueOffset = min(maximumValue, max(minimumValue, value - minimumValue))
+        let maximumRelativeValue = maximumValue - minimumValue
+        let minimumRelativeValue = value - minimumValue
+        let valueOffset = min(maximumRelativeValue, max(0, minimumRelativeValue))
         let itemOffset = Int(valueOffset / stepValue)
         
         if itemOffset == 0  {
@@ -210,10 +212,11 @@ open class SteppedSlider: UIControl {
     }
 
     private func reset() {
+        rawValue = minimumValue
         if isContinuous {
             resetContinuously()
         } else {
-            
+            resetDiscontinuously()
         }
     }
     
