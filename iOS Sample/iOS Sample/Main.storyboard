@@ -15,33 +15,60 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEh-6o-YOg" customClass="SteppedSlider" customModule="SteppedSlider">
-                                <rect key="frame" x="66" y="423" width="282" height="50"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="282" id="Stc-n6-i2P"/>
-                                    <constraint firstAttribute="height" constant="50" id="oJH-Iq-Z4l"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="value: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3wd-9P-tRb">
-                                <rect key="frame" x="177" y="489" width="60" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="80" translatesAutoresizingMaskIntoConstraints="NO" id="LwY-G9-krA">
+                                <rect key="frame" x="66" y="330.5" width="282" height="235"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="R1i-AE-Xzn">
+                                        <rect key="frame" x="0.0" y="0.0" width="282" height="86.5"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEh-6o-YOg" customClass="SteppedSlider" customModule="SteppedSlider">
+                                                <rect key="frame" x="0.0" y="0.0" width="282" height="50"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="282" id="Stc-n6-i2P"/>
+                                                    <constraint firstAttribute="height" constant="50" id="oJH-Iq-Z4l"/>
+                                                </constraints>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="value: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3wd-9P-tRb">
+                                                <rect key="frame" x="111" y="66" width="60" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="aw5-nP-NSZ">
+                                        <rect key="frame" x="94" y="166.5" width="94" height="68.5"/>
+                                        <subviews>
+                                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="10" stepValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="4co-nd-hGN">
+                                                <rect key="frame" x="0.0" y="0.0" width="94" height="32"/>
+                                                <connections>
+                                                    <action selector="stepperValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="8Jk-LR-oaX"/>
+                                                </connections>
+                                            </stepper>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="value: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNQ-BK-99x">
+                                                <rect key="frame" x="17" y="48" width="60" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="XEh-6o-YOg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4Ow-6g-uqP"/>
-                            <constraint firstItem="3wd-9P-tRb" firstAttribute="top" secondItem="XEh-6o-YOg" secondAttribute="bottom" constant="16" id="EvF-FS-vJj"/>
-                            <constraint firstItem="3wd-9P-tRb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pLK-TL-GHS"/>
-                            <constraint firstItem="XEh-6o-YOg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="qlk-W4-l25"/>
+                            <constraint firstItem="LwY-G9-krA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="lDn-jX-mhD"/>
+                            <constraint firstItem="LwY-G9-krA" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="uCP-Jc-cV8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="slider" destination="XEh-6o-YOg" id="hLA-5f-42L"/>
-                        <outlet property="textLabel" destination="3wd-9P-tRb" id="LIS-23-SGN"/>
+                        <outlet property="stepper" destination="4co-nd-hGN" id="NUS-RH-YXA"/>
+                        <outlet property="stepperTextLabel" destination="vNQ-BK-99x" id="pey-Ib-B2g"/>
+                        <outlet property="textLabel" destination="3wd-9P-tRb" id="8oX-KX-Vgj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

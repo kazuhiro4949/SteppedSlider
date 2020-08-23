@@ -29,6 +29,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var slider: SteppedSlider!
     @IBOutlet weak var textLabel: UILabel!
     
+    @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet weak var stepperTextLabel: UILabel!
+    
+    
     var observer = [NSKeyValueObservation]()
     
     override func viewDidLoad() {
@@ -36,14 +40,20 @@ class ViewController: UIViewController {
         
         slider.minimumValue = 1
         slider.maximumValue = 10
+        slider.stepValue = 2
+        textLabel.text = "\(slider.value)"
 //        slider.currentMaximumTrackImage = UIImage(systemName: "smiley")
 //        slider.currentMinimumTrackImage = UIImage(systemName: "smiley.fill")
         slider.isContinuous = true
         
         
         slider.addTarget(self, action: #selector(valueChanged(_:)), for: .valueChanged)
+        textLabel.text = "\(stepper.value)"
     }
-
+    @IBAction func stepperValueChanged(_ sender: UIStepper) {
+        stepperTextLabel.text = "\(sender.value)"
+    }
+    
     @objc func valueChanged(_ slider: SteppedSlider) {
         textLabel.text = "\(slider.value)"
     }
