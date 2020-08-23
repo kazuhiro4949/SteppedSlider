@@ -27,6 +27,9 @@ import SteppedSlider
 
 class ViewController: UIViewController {
     @IBOutlet weak var slider: SteppedSlider!
+    @IBOutlet weak var textLabel: UILabel!
+    
+    var observer = [NSKeyValueObservation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +39,13 @@ class ViewController: UIViewController {
 //        slider.currentMaximumTrackImage = UIImage(systemName: "smiley")
 //        slider.currentMinimumTrackImage = UIImage(systemName: "smiley.fill")
         slider.isContinuous = true
+        
+        
+        slider.addTarget(self, action: #selector(valueChanged(_:)), for: .valueChanged)
     }
 
-
+    @objc func valueChanged(_ slider: SteppedSlider) {
+        textLabel.text = "\(slider.value)"
+    }
 }
 

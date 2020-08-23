@@ -23,16 +23,25 @@
                                     <constraint firstAttribute="height" constant="50" id="oJH-Iq-Z4l"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="value: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3wd-9P-tRb">
+                                <rect key="frame" x="177" y="489" width="60" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="XEh-6o-YOg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4Ow-6g-uqP"/>
+                            <constraint firstItem="3wd-9P-tRb" firstAttribute="top" secondItem="XEh-6o-YOg" secondAttribute="bottom" constant="16" id="EvF-FS-vJj"/>
+                            <constraint firstItem="3wd-9P-tRb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pLK-TL-GHS"/>
                             <constraint firstItem="XEh-6o-YOg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="qlk-W4-l25"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="slider" destination="XEh-6o-YOg" id="hLA-5f-42L"/>
+                        <outlet property="textLabel" destination="3wd-9P-tRb" id="LIS-23-SGN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
