@@ -148,6 +148,8 @@ open class SteppedSlider: UIControl {
         return min(maximumValue, minimumValue + itemOffset)
     }
     
+    open var animationSpeed: CGFloat = 0.2
+    
     func getItem(from value: Double) -> Int? {
         let maximumRelativeValue = maximumValue - minimumValue
         let relativeValue = value - minimumValue
@@ -336,7 +338,9 @@ open class SteppedSlider: UIControl {
         }
     }
     
-    open var animationSpeed: CGFloat = 0.2
+    deinit {
+        animator?.interrupt()
+    }
     
 //    func preferredImage(for state: UIControl.State) -> UIImage? {
 //        return nil

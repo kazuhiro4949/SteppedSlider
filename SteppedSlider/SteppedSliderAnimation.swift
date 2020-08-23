@@ -39,6 +39,10 @@ class SteppedSliderAnimation: NSObject {
         displaylink.add(to: RunLoop.main, forMode: .common)
     }
     
+    func interrupt() {
+        displaylink.invalidate()
+    }
+    
     @objc func update(_ displaylink: CADisplayLink) {
         let currentTime = Date.timeIntervalSinceReferenceDate
         guard currentTime <= endTime else {
