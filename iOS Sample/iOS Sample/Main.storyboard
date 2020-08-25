@@ -16,10 +16,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="80" translatesAutoresizingMaskIntoConstraints="NO" id="LwY-G9-krA">
-                                <rect key="frame" x="66" y="307.5" width="282" height="281"/>
+                                <rect key="frame" x="57" y="211.5" width="300" height="473.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="R1i-AE-Xzn">
-                                        <rect key="frame" x="0.0" y="0.0" width="282" height="132.5"/>
+                                        <rect key="frame" x="9" y="0.0" width="282" height="132.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEh-6o-YOg" customClass="SteppedSlider" customModule="SteppedSlider">
                                                 <rect key="frame" x="0.0" y="0.0" width="282" height="50"/>
@@ -45,7 +45,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="aw5-nP-NSZ">
-                                        <rect key="frame" x="94" y="212.5" width="94" height="68.5"/>
+                                        <rect key="frame" x="103" y="212.5" width="94" height="68.5"/>
                                         <subviews>
                                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.10000000000000001" minimumValue="0.10000000000000001" maximumValue="1" stepValue="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="4co-nd-hGN">
                                                 <rect key="frame" x="0.0" y="0.0" width="94" height="32"/>
@@ -61,6 +61,30 @@
                                             </label>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="thx-I8-GAZ">
+                                        <rect key="frame" x="0.0" y="361" width="300" height="112.5"/>
+                                        <subviews>
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.10000000000000001" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="9bM-LM-sGw">
+                                                <rect key="frame" x="-2" y="0.0" width="304" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="300" id="RPj-mt-HQW"/>
+                                                </constraints>
+                                            </slider>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="value: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tv8-uZ-B2w">
+                                                <rect key="frame" x="120" y="46" width="60" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4vn-rt-RTY">
+                                                <rect key="frame" x="115.5" y="82.5" width="69" height="30"/>
+                                                <state key="normal" title="Animation"/>
+                                                <connections>
+                                                    <action selector="sliderAnimationButtonTouchUpInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="be6-Xh-FX7"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -73,9 +97,11 @@
                     </view>
                     <connections>
                         <outlet property="slider" destination="XEh-6o-YOg" id="hLA-5f-42L"/>
+                        <outlet property="sliderTextLabel" destination="Tv8-uZ-B2w" id="vRm-31-vHe"/>
                         <outlet property="stepper" destination="4co-nd-hGN" id="NUS-RH-YXA"/>
                         <outlet property="stepperTextLabel" destination="vNQ-BK-99x" id="pey-Ib-B2g"/>
                         <outlet property="textLabel" destination="3wd-9P-tRb" id="8oX-KX-Vgj"/>
+                        <outlet property="uiSlider" destination="9bM-LM-sGw" id="Dig-cN-aXe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

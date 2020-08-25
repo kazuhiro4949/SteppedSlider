@@ -48,11 +48,7 @@ open class SteppedSlider: UIControl {
         }
     }
     
-    private var rawValue: Double = 0 {
-        didSet {
-            sendActions(for: .valueChanged)
-        }
-    }
+    private var rawValue: Double = 0
     
     private var animator: SteppedSliderAnimation?
     
@@ -205,6 +201,7 @@ open class SteppedSlider: UIControl {
         }
         
         updateImageStates(item: item)
+        sendActions(for: .valueChanged)
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -218,6 +215,7 @@ open class SteppedSlider: UIControl {
         }
 
         updateImageStates(item: item)
+        sendActions(for: .valueChanged)
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
