@@ -57,7 +57,8 @@ class SteppedSliderImageView: UIImageView {
     private var activeTintColor: UIColor?
     private var inactiveTintColor: UIColor?
     
-    var item: Int?
+    var item: Int!
+    var value: Double!
     
     init(activeImage: UIImage?, inactiveImage: UIImage?, activeTintColor: UIColor?, inactiveTintColor: UIColor?) {
         super.init(frame: CGRect.zero)

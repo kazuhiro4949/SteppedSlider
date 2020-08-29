@@ -36,10 +36,12 @@ open class SteppedSlider: UIControl {
     /// default 0. this value will be pinned to min/max
     open var value: Double {
         set {
-            if let item = getItem(from: rawValue) {
+            if let item = getItem(from: newValue) {
                 updateImageStates(item: item)
+                currentItem = item
             } else {
                 rawValue = newValue
+                currentItem = 0
                 reset()
             }
         }
@@ -49,8 +51,11 @@ open class SteppedSlider: UIControl {
     }
     
     private var rawValue: Double = 0
+    private var currentItem: Int = 0
     
     private var animator: SteppedSliderAnimation?
+    
+    private var wrap = false
     
     /// default 0 the current value may change if outside new min value
     open var minimumValue: Double = 0 {
@@ -147,16 +152,10 @@ open class SteppedSlider: UIControl {
     open var animationSpeed: CGFloat = 0.2
     
     func getItem(from value: Double) -> Int? {
-        let maximumRelativeValue = maximumValue - minimumValue
-        let relativeValue = value - minimumValue
-        let valueOffset = min(maximumRelativeValue, max(0, relativeValue))
-        let itemOffset = Int(ceil(valueOffset / stepValue))
-        
-        if itemOffset == 0  {
+        guard let view = stackView.subviews.first(where: { ($0 as? SteppedSliderImageView)?.value == value }) as? SteppedSliderImageView else {
             return nil
-        } else {
-            return itemOffset - 1
         }
+        return view.item
     }
     
     public override init(frame: CGRect) {
@@ -211,6 +210,7 @@ open class SteppedSlider: UIControl {
         guard let imageView = hitTest(hitTestPoint, with: event) as? SteppedSliderImageView,
             let item = imageView.item else {
                 updateStateIfExceeded(point: hitTestPoint)
+                sendActions(for: .valueChanged)
                 return
         }
 
@@ -224,6 +224,7 @@ open class SteppedSlider: UIControl {
 
     private func reset() {
         rawValue = minimumValue
+        currentItem = 0
         if isContinuous {
             resetContinuously()
         } else {
@@ -244,6 +245,7 @@ open class SteppedSlider: UIControl {
                 activeTintColor: minimumTrackTintColor,
                 inactiveTintColor: maximumTrackTintColor)
             imageView.item = item
+            imageView.value = getValue(from: item)
             imageView.contentMode = .scaleAspectFit
             imageView.layer.masksToBounds = true
             stackView.addArrangedSubview(imageView)
@@ -290,39 +292,36 @@ open class SteppedSlider: UIControl {
     }
     
     private func updateImageStatesContinuously(item: Int) {
-        let newValue = getValue(from: item)
-        let oldItem = getItem(from: rawValue) ?? 0
         
-        if rawValue < newValue {
-            (oldItem...item).forEach {
+        if currentItem < item {
+            (currentItem...item).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .active
             }
-        } else if newValue < rawValue {
-            (item+1...oldItem).forEach {
+        } else if item < currentItem {
+            (item+1...currentItem).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
             }
         }
-
-        rawValue = newValue
+        
+        rawValue = getValue(from: item)
+        currentItem = item
     }
     
     private func updateImageStatesDiscontinuously(item: Int) {
-        let newValue = getValue(from: item)
-        let oldItem = getItem(from: rawValue) ?? 0
-        
         (stackView.subviews[item] as? SteppedSliderImageView)?.state = .active
         
-        if rawValue < newValue {
-            (oldItem..<item).forEach {
+        if currentItem < item {
+            (currentItem..<item).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
             }
-        } else if newValue < rawValue {
-            (item+1...oldItem).forEach {
+        } else if item < currentItem {
+            (item+1...currentItem).forEach {
                 (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
             }
         }
-
-        rawValue = newValue
+        
+        rawValue = getValue(from: item)
+        currentItem = item
     }
     
     
@@ -330,9 +329,11 @@ open class SteppedSlider: UIControl {
         if let lastImageView = stackView.subviews.last as? SteppedSliderImageView, lastImageView.frame.maxX < point.x {
             lastImageView.state = .active
             rawValue = maximumValue
+            currentItem = stackView.subviews.endIndex - 1
         } else if let firstImageView = stackView.subviews.first as? SteppedSliderImageView, point.x < firstImageView.frame.minX {
             firstImageView.state = .inactive
             rawValue = minimumValue
+            currentItem = 0
         }
     }
     

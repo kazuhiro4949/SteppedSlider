@@ -40,18 +40,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        slider.minimumValue = 0.1
-        slider.maximumValue = 1
-        slider.stepValue = 0.1
+        slider.minimumValue = 1
+        slider.maximumValue = 10
+        slider.stepValue = 2
         textLabel.text = "\(slider.value)"
 //        slider.currentMaximumTrackImage = UIImage(systemName: "smiley")
 //        slider.currentMinimumTrackImage = UIImage(systemName: "smiley.fill")
-        slider.isContinuous = true
+//        slider.isContinuous = false
         
         
         slider.addTarget(self, action: #selector(valueChanged(_:)), for: .valueChanged)
         textLabel.text = "\(stepper.value)"
-        
         uiSlider.addTarget(
             self,
             action: #selector(sliderValueChanged(_:)),
