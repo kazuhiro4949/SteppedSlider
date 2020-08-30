@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B6864CD24FB565F00B6D19B /* SteppedSliderListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6864CC24FB565F00B6D19B /* SteppedSliderListController.swift */; };
 		2B90C7DA24F250970002F096 /* SteppedSliderAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B90C7D924F250970002F096 /* SteppedSliderAnimation.swift */; };
 		2BE5DE4B24F1402000B7894A /* SteppedSlider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE5DE4124F1402000B7894A /* SteppedSlider.framework */; };
 		2BE5DE5024F1402000B7894A /* SteppedSliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE5DE4F24F1402000B7894A /* SteppedSliderTests.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2B6864CC24FB565F00B6D19B /* SteppedSliderListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteppedSliderListController.swift; sourceTree = "<group>"; };
 		2B90C7D924F250970002F096 /* SteppedSliderAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteppedSliderAnimation.swift; sourceTree = "<group>"; };
 		2BE5DE4124F1402000B7894A /* SteppedSlider.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SteppedSlider.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BE5DE4424F1402000B7894A /* SteppedSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SteppedSlider.h; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				2BE5DE9724F1409100B7894A /* SteppedSlider.swift */,
 				2BE5DE9924F140D300B7894A /* SteppedSliderImageView.swift */,
 				2B90C7D924F250970002F096 /* SteppedSliderAnimation.swift */,
+				2B6864CC24FB565F00B6D19B /* SteppedSliderListController.swift */,
 				2BE5DE4524F1402000B7894A /* Info.plist */,
 			);
 			path = SteppedSlider;
@@ -205,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B6864CD24FB565F00B6D19B /* SteppedSliderListController.swift in Sources */,
 				2B90C7DA24F250970002F096 /* SteppedSliderAnimation.swift in Sources */,
 				2BE5DE9824F1409100B7894A /* SteppedSlider.swift in Sources */,
 				2BE5DE9A24F140D300B7894A /* SteppedSliderImageView.swift in Sources */,

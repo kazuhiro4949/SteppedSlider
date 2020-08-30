@@ -57,10 +57,11 @@ class SteppedSliderImageView: UIImageView {
     private var activeTintColor: UIColor?
     private var inactiveTintColor: UIColor?
     
-    var item: Int!
+    let item: Int
     var value: Double!
     
-    init(activeImage: UIImage?, inactiveImage: UIImage?, activeTintColor: UIColor?, inactiveTintColor: UIColor?) {
+    init(item: Int, activeImage: UIImage?, inactiveImage: UIImage?, activeTintColor: UIColor?, inactiveTintColor: UIColor?) {
+        self.item = item
         super.init(frame: CGRect.zero)
         
         self.activeImage = activeImage
@@ -68,6 +69,8 @@ class SteppedSliderImageView: UIImageView {
         self.activeTintColor = activeTintColor
         self.inactiveTintColor = inactiveTintColor
         isUserInteractionEnabled = true
+        contentMode = .scaleAspectFit
+        layer.masksToBounds = true
     }
     
     required init?(coder: NSCoder) {

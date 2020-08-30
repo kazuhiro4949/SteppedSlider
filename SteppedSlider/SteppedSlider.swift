@@ -27,40 +27,28 @@ import UIKit
 open class SteppedSlider: UIControl {
     open override var contentMode: UIView.ContentMode {
         didSet {
-            stackView.arrangedSubviews.forEach {
-                $0.contentMode = contentMode
-            }
+            listController.contentMode = contentMode
         }
     }
     
     /// default 0. this value will be pinned to min/max
     open var value: Double {
         set {
-            if let item = getItem(from: newValue) {
-                updateImageStates(item: item)
-                currentItem = item
-            } else {
-                rawValue = newValue
-                currentItem = 0
-                reset()
-            }
+            listController.updateImageStates(from: newValue)
         }
         get {
-            return rawValue
+            return listController.rawValue
         }
     }
     
-    private var rawValue: Double = 0
-    private var currentItem: Int = 0
+    private let listController = SteppedSliderListController()
     
     private var animator: SteppedSliderAnimation?
-    
-    private var wrap = false
     
     /// default 0 the current value may change if outside new min value
     open var minimumValue: Double = 0 {
         didSet {
-            minimumValue = min(minimumValue, maximumValue)
+            listController.minimumValue = minimumValue
             reset()
         }
     }
@@ -68,7 +56,7 @@ open class SteppedSlider: UIControl {
     /// default 5. the current value may change if outside new max value
     open var maximumValue: Double = 5 {
         didSet {
-            maximumValue = max(minimumValue, maximumValue)
+            listController.maximumValue = maximumValue
             reset()
         }
     }
@@ -76,9 +64,7 @@ open class SteppedSlider: UIControl {
     /// default 1. must be greater than 0
     open var stepValue: Double = 1{
         didSet {
-            if stepValue <= 0 {
-                stepValue = 1
-            }
+            listController.stepValue = stepValue
             reset()
         }
     }
@@ -86,6 +72,7 @@ open class SteppedSlider: UIControl {
     /// default is nil. image that appears to left of control (e.g. speaker off)
     open var currentMinimumTrackImage: UIImage? = UIImage(systemName: "star.fill") {
         didSet {
+            listController.currentMinimumTrackImage = currentMinimumTrackImage
             reset()
         }
     }
@@ -93,6 +80,7 @@ open class SteppedSlider: UIControl {
     // default is nil. image that appears to right of control (e.g. speaker max)
     open var currentMaximumTrackImage: UIImage? = UIImage(systemName: "star") {
         didSet {
+            listController.currentMaximumTrackImage = currentMaximumTrackImage
             reset()
         }
     }
@@ -101,6 +89,7 @@ open class SteppedSlider: UIControl {
     /// default is yello. image that appears to left of control (e.g. speaker off)
     open var minimumTrackTintColor: UIColor? = .systemYellow {
         didSet {
+            listController.minimumTrackTintColor = minimumTrackTintColor
             reset()
         }
     }
@@ -108,7 +97,7 @@ open class SteppedSlider: UIControl {
     /// default is gray. image that appears to left of control (e.g. speaker off)
     open var maximumTrackTintColor: UIColor? = .systemGray4 {
         didSet {
-            reset()
+            listController.maximumTrackTintColor = maximumTrackTintColor
         }
     }
 
@@ -117,12 +106,11 @@ open class SteppedSlider: UIControl {
         if animated {
             animator = SteppedSliderAnimation(
                 animationSpeed: animationSpeed,
-                begin: rawValue,
+                begin: listController.rawValue,
                 end: value,
                 update: { [weak self] (_, value) in
-                    if let item = self?.getItem(from: value) {
-                        self?.updateImageStates(item: item)
-                    }
+                    self?.listController
+                        .updateImageStates(from: value)
                 },
                 complesion: { [weak self] (_) in
                     self?.animator = nil
@@ -135,27 +123,31 @@ open class SteppedSlider: UIControl {
     }
     
     open var numberOfValues: Int {
-       Int(ceil((maximumValue - minimumValue) / stepValue)) + 1
+        listController.numberOfValues
     }
     
     open var numberOfItems: Int {
-       Int(ceil((maximumValue - minimumValue) / stepValue))
+        listController.numberOfItems
     }
     
-    open var isContinuous: Bool = true
+    open var isContinuous: Bool {
+        set {
+            listController.isContinuous = newValue
+            reset()
+        }
+        get {
+            listController.isContinuous
+        }
+    }
     
     open func getValue(from item: Int) -> Double {
-        let itemOffset = Double(item + 1) * stepValue
-        return min(maximumValue, minimumValue + itemOffset)
+        listController.getValue(from: item)
     }
     
     open var animationSpeed: CGFloat = 0.2
     
-    func getItem(from value: Double) -> Int? {
-        guard let view = stackView.subviews.first(where: { ($0 as? SteppedSliderImageView)?.value == value }) as? SteppedSliderImageView else {
-            return nil
-        }
-        return view.item
+    func getItem(from value: Double) -> Int {
+        listController.getItem(from: value)
     }
     
     public override init(frame: CGRect) {
@@ -194,12 +186,11 @@ open class SteppedSlider: UIControl {
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         guard let touch = touches.first else { return }
-        guard let imageView = hitTest(touch.location(in: self), with: event) as? SteppedSliderImageView,
-            let item = imageView.item else {
+        guard let imageView = hitTest(touch.location(in: self), with: event) as? SteppedSliderImageView else {
             return
         }
         
-        updateImageStates(item: item)
+        listController.updateImageStates(from: imageView.item)
         sendActions(for: .valueChanged)
     }
     
@@ -207,14 +198,13 @@ open class SteppedSlider: UIControl {
         super.touchesMoved(touches, with: event)
         guard let touch = touches.first else { return }
         let hitTestPoint = CGPoint(x: touch.location(in: self).x, y: stackView.bounds.midY)
-        guard let imageView = hitTest(hitTestPoint, with: event) as? SteppedSliderImageView,
-            let item = imageView.item else {
-                updateStateIfExceeded(point: hitTestPoint)
+        guard let imageView = hitTest(hitTestPoint, with: event) as? SteppedSliderImageView else {
+                listController.updateStateIfExceeded(point: hitTestPoint)
                 sendActions(for: .valueChanged)
                 return
         }
 
-        updateImageStates(item: item)
+        listController.updateImageStates(from: imageView.item)
         sendActions(for: .valueChanged)
     }
     
@@ -223,121 +213,25 @@ open class SteppedSlider: UIControl {
     }
 
     private func reset() {
-        rawValue = minimumValue
-        currentItem = 0
-        if isContinuous {
-            resetContinuously()
-        } else {
-            resetDiscontinuously()
-        }
-    }
-    
-    private func resetContinuously() {
-        stackView.arrangedSubviews.forEach {
-            stackView.removeArrangedSubview($0)
-            $0.removeFromSuperview()
-        }
+        stackView.removeArrangedSubviewsCompletely()
+        listController.reset()
         
         (0..<numberOfItems).forEach { item in
-            let imageView = SteppedSliderImageView(
-                activeImage: currentMinimumTrackImage,
-                inactiveImage: currentMaximumTrackImage,
-                activeTintColor: minimumTrackTintColor,
-                inactiveTintColor: maximumTrackTintColor)
-            imageView.item = item
-            imageView.value = getValue(from: item)
-            imageView.contentMode = .scaleAspectFit
-            imageView.layer.masksToBounds = true
+            let imageView = listController.generateImageView(item: item)
             stackView.addArrangedSubview(imageView)
-            
-            if rawValue < getValue(from: item) {
-                imageView.state = .inactive
-            } else {
-                imageView.state = .active
-            }
-        }
-    }
-    
-    private func resetDiscontinuously() {
-        stackView.arrangedSubviews.forEach {
-            stackView.removeArrangedSubview($0)
-            $0.removeFromSuperview()
-        }
-        
-        (0..<numberOfItems).forEach { item in
-            let imageView = SteppedSliderImageView(
-                activeImage: currentMinimumTrackImage,
-                inactiveImage: currentMaximumTrackImage,
-                activeTintColor: minimumTrackTintColor,
-                inactiveTintColor: maximumTrackTintColor)
-            imageView.item = item
-            imageView.contentMode = .scaleAspectFit
-            imageView.layer.masksToBounds = true
-            stackView.addArrangedSubview(imageView)
-            
-            if rawValue == getValue(from: item) {
-                imageView.state = .active
-            } else {
-                imageView.state = .inactive
-            }
-        }
-    }
-    
-    private func updateImageStates(item: Int) {
-        if isContinuous {
-            updateImageStatesContinuously(item: item)
-        } else {
-            updateImageStatesDiscontinuously(item: item)
-        }
-    }
-    
-    private func updateImageStatesContinuously(item: Int) {
-        
-        if currentItem < item {
-            (currentItem...item).forEach {
-                (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .active
-            }
-        } else if item < currentItem {
-            (item+1...currentItem).forEach {
-                (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
-            }
-        }
-        
-        rawValue = getValue(from: item)
-        currentItem = item
-    }
-    
-    private func updateImageStatesDiscontinuously(item: Int) {
-        (stackView.subviews[item] as? SteppedSliderImageView)?.state = .active
-        
-        if currentItem < item {
-            (currentItem..<item).forEach {
-                (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
-            }
-        } else if item < currentItem {
-            (item+1...currentItem).forEach {
-                (stackView.subviews[$0] as? SteppedSliderImageView)?.state = .inactive
-            }
-        }
-        
-        rawValue = getValue(from: item)
-        currentItem = item
-    }
-    
-    
-    private func updateStateIfExceeded(point: CGPoint) {
-        if let lastImageView = stackView.subviews.last as? SteppedSliderImageView, lastImageView.frame.maxX < point.x {
-            lastImageView.state = .active
-            rawValue = maximumValue
-            currentItem = stackView.subviews.endIndex - 1
-        } else if let firstImageView = stackView.subviews.first as? SteppedSliderImageView, point.x < firstImageView.frame.minX {
-            firstImageView.state = .inactive
-            rawValue = minimumValue
-            currentItem = 0
         }
     }
     
     deinit {
         animator?.interrupt()
+    }
+}
+
+extension UIStackView {
+    func removeArrangedSubviewsCompletely() {
+        arrangedSubviews.forEach {
+            removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
     }
 }
