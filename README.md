@@ -68,7 +68,7 @@ import SteppedSlider
 SteppedSlider is one of UICnotrol. So you can use it easily.
 
 1. Add View on Storyboard and input SteppedSlider class and module in Custom Class.
-<img width="500" src="https://user-images.githubusercontent.com/18320004/91662359-f4fc2b80-eb1c-11ea-9e9f-8e9f4fc0d406.png">
+<img width="900" src="https://user-images.githubusercontent.com/18320004/91662359-f4fc2b80-eb1c-11ea-9e9f-8e9f4fc0d406.png">
 
 2. Connect IBOutlet to a soruce code
 ```swift
