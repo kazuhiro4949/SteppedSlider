@@ -25,8 +25,7 @@
 import UIKit
 
 class SteppedSliderListController {
-    
-    static let emptyIndex: Int = -1
+    private static let emptyIndex: Int = -1
 
     var elements = [SteppedSliderImageView]()
     

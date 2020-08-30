@@ -25,13 +25,14 @@
 import UIKit
 
 open class SteppedSlider: UIControl {
+    /// default scaleToFill. content mode for each slider element
     open override var contentMode: UIView.ContentMode {
         didSet {
             listController.contentMode = contentMode
         }
     }
     
-    /// default 0. this value will be pinned to min/max
+    /// default 0. this value will be pinned to min/max, dose not send action
     open var value: Double {
         set {
             listController.updateImageStates(from: newValue)
@@ -122,6 +123,7 @@ open class SteppedSlider: UIControl {
         }
     }
     
+    /// numberOfValues is numberOfItems + 1, because empty slider has a value.
     open var numberOfValues: Int {
         listController.numberOfValues
     }
@@ -130,6 +132,7 @@ open class SteppedSlider: UIControl {
         listController.numberOfItems
     }
     
+    /// if set, value change events are generated any time the value changes due to dragging. default = false
     open var isContinuous: Bool {
         set {
             listController.isContinuous = newValue
@@ -140,12 +143,15 @@ open class SteppedSlider: UIControl {
         }
     }
     
+    /// this value will be pinned to min/max,
     open func getValue(from item: Int) -> Double {
         listController.getValue(from: item)
     }
     
+    /// velocity of slider
     open var animationSpeed: CGFloat = 0.2
     
+    /// this value will be pinned to min/max,
     func getItem(from value: Double) -> Int {
         listController.getItem(from: value)
     }
@@ -160,6 +166,7 @@ open class SteppedSlider: UIControl {
         commonInit()
     }
     
+    // defalut 4; spaces between elements
     public var spacing: CGFloat = 4 {
         didSet {
             stackView.spacing = spacing
