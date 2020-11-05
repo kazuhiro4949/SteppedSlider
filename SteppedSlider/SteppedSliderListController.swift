@@ -96,7 +96,7 @@ class SteppedSliderListController {
     func getItem(from value: Double) -> Int {
         if value <= minimumValue {
             return SteppedSliderListController.emptyIndex
-        } else if let view = elements.first(where: { $0.value <= value }) {
+        } else if let view = elements.first(where: { value <= $0.value }) {
             return view.item
         } else {
             return max(0, (elements.count - 1))

@@ -236,6 +236,7 @@ open class SteppedSlider: UIControl {
         
         (0..<numberOfItems).forEach { item in
             let imageView = listController.generateImageView(item: item)
+            imageView.value = getValue(from: item)
             stackView.addArrangedSubview(imageView)
         }
     }
