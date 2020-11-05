@@ -62,6 +62,17 @@ open class SteppedSlider: UIControl {
         }
     }
     
+    /// valid range of value
+    open var values: ClosedRange<Double> {
+        set {
+            minimumValue = newValue.lowerBound
+            maximumValue = newValue.upperBound
+        }
+        get {
+            (minimumValue...maximumValue)
+        }
+    }
+    
     /// default 1. must be greater than 0
     open var stepValue: Double = 1{
         didSet {
