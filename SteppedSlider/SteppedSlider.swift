@@ -46,6 +46,8 @@ open class SteppedSlider: UIControl {
     
     private var animator: SteppedSliderAnimation?
     
+    private var feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)
+    
     /// default 0 the current value may change if outside new min value
     open var minimumValue: Double = 0 {
         didSet {
@@ -196,6 +198,7 @@ open class SteppedSlider: UIControl {
     }()
         
     private func commonInit() {
+        feedbackGenerator.prepare()
         stackView.frame = bounds
         addSubview(stackView)
         reset()
@@ -208,8 +211,10 @@ open class SteppedSlider: UIControl {
             return
         }
         
-        listController.updateImageStates(from: imageView.item)
-        sendActions(for: .valueChanged)
+        listController.updateImageStates(from: imageView.item) { [weak self] (_, _) in
+            self?.feedbackGenerator.impactOccurred()
+            self?.sendActions(for: .valueChanged)
+        }
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -217,13 +222,18 @@ open class SteppedSlider: UIControl {
         guard let touch = touches.first else { return }
         let hitTestPoint = CGPoint(x: touch.location(in: self).x, y: stackView.bounds.midY)
         guard let imageView = hitTest(hitTestPoint, with: event) as? SteppedSliderImageView else {
-                listController.updateStateIfExceeded(point: hitTestPoint)
-                sendActions(for: .valueChanged)
-                return
+            listController.updateStateIfExceeded(point: hitTestPoint) { [weak self] _, _ in
+                self?.feedbackGenerator.impactOccurred()
+                self?.sendActions(for: .valueChanged)
+            }
+            sendActions(for: .valueChanged)
+            return
         }
 
-        listController.updateImageStates(from: imageView.item)
-        sendActions(for: .valueChanged)
+        listController.updateImageStates(from: imageView.item) { [weak self] (_, _) in
+            self?.feedbackGenerator.impactOccurred()
+            self?.sendActions(for: .valueChanged)
+        }
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

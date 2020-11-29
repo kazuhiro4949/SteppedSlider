@@ -29,6 +29,8 @@ class SteppedSliderListController {
 
     var elements = [SteppedSliderImageView]()
     
+    var valueChangedHandler: ((Double, Double) -> Void)?
+    
     var rawValue: Double = 0
     var currentItem: Int = emptyIndex
     
@@ -110,16 +112,20 @@ class SteppedSliderListController {
     }
     
     func updateImageStates(from value: Double) {
-        updateImageStates(from: getItem(from: value))
+        updateImageStates(from: getItem(from: value), valueChangedHandler: nil)
     }
     
-    func updateImageStates(from item: Int) {
+    func updateImageStates(from item: Int, valueChangedHandler: ((Double, Double) -> Void)?) {
         if isContinuous {
             updateImageStatesContinuously(item: item)
         } else {
             updateImageStatesDiscontinuously(item: item)
         }
         
+        let newValue = getValue(from: item)
+        if newValue != rawValue {
+            valueChangedHandler?(rawValue, newValue)
+        }
         rawValue = getValue(from: item)
         currentItem = item
     }
@@ -150,16 +156,24 @@ class SteppedSliderListController {
         }
     }
     
-    func updateStateIfExceeded(point: CGPoint) {
+    func updateStateIfExceeded(point: CGPoint, valueChangedHandler: ((Double, Double) -> Void)?) {
         if let lastImageView = elements.last,
             lastImageView.frame.maxX < point.x {
             lastImageView.state = .active
-            rawValue = maximumValue
+            let newValue = maximumValue
+            if newValue != rawValue {
+                valueChangedHandler?(rawValue, newValue)
+            }
+            rawValue = newValue
             currentItem = elements.endIndex - 1
         } else if let firstImageView = elements.first,
             point.x < firstImageView.frame.minX {
             firstImageView.state = .inactive
-            rawValue = minimumValue
+            let newValue = minimumValue
+            if newValue != rawValue {
+                valueChangedHandler?(rawValue, newValue)
+            }
+            rawValue = newValue
             currentItem = SteppedSliderListController.emptyIndex
         }
     }
